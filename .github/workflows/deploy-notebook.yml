@@ -1,0 +1,33 @@
+name: Deploy Notebook
+on:
+  push:
+    paths: ['chd-classifier.ipynb']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: pip install jupyter nbconvert[webpdf]
+          
+      - name: Convert notebook
+        run: |
+          jupyter nbconvert --to html --no-input \
+            --template lab \
+            --output chd-classifier.html \
+            chd-classifier.ipynb
+          
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          include_files: chd-classifier.html
