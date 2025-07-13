@@ -1,7 +1,7 @@
 name: Deploy Notebook
 on:
   push:
-    paths: ['chd-classifier.ipynb']
+    paths: ['chd_classifier.ipynb']
   workflow_dispatch:
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
           jupyter nbconvert --to html --no-input \
             --template lab \
             --output chd-classifier.html \
-            chd-classifier.ipynb
+            chd_classifier.ipynb
           
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
