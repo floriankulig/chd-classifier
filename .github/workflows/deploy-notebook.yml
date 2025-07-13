@@ -4,6 +4,11 @@ on:
     paths: ['chd_classifier.ipynb']
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,14 +25,14 @@ jobs:
           
       - name: Convert notebook
         run: |
+          mkdir -p dist
           jupyter nbconvert --to html --no-input \
             --template lab \
-            --output chd-classifier.html \
+            --output dist/index.html \
             chd_classifier.ipynb
           
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          include_files: chd-classifier.html
+          publish_dir: ./dist
